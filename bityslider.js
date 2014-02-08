@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-*/
+ 
+* */
 
 
  
@@ -35,24 +36,70 @@ jQuery.fn.bityslider = function(time,type){
         var count = ($(this).children().length)-1;
         var index = 0;
         var next = 1;
-        
+        var first =  $(container).children().eq(0);
+        var c_height;
+        var c_width;       
         
         $(container).children().hide();
-        $(container).children().eq(0).show();
-        $(container).children().eq(0).load(function(){     
-       
-        var c_height = $(container).children().eq(0).height();
-        var c_width = $(container).children().eq(0).width();
+     
+     /*check container size with no elements. if 0, we know size is undefined*/
+        var defined_height = $(container).height();
+        var defined_width = $(container).width();
+        $(first).show();
+      
+     /*check if the first slide is loaded / rendered, if so fire (non-image test is here)*/   
+        if(first.complete || $(first).height() > 0){
+            start_bity();        
+        }
+    
+    /*if it hasn't rendered yet it is probably an image. Use load to fire once it has rendered*/
+        else{
+           $(first).load(function(){
+               start_bity();
+           });
+        }
+        
+        function start_bity(){
+     
+     /*set height and width for the container if not defined*/
             
-        $(container).css({ "height":c_height, "width":c_width});
-        
-        bity_action();
-   
-        
-        });
+            define_dims(first);
+          
+            $(container).css({ "height":c_height, "width":c_width});
+                   
+            bity_action();
+        }
+
+        /*if the container size is defined use that dimension.
+         * If not use the visible slide dimension.
+         * If just one is defined, determine the ratio and define it that way.
+         *
+         */
+        function define_dims(elem){
+            
+            var ratio = $(elem).width()/$(elem).height();
+            
+            if(defined_height != 0 && defined_width != 0){
+               c_height = defined_height;
+               c_width = defined_width;
+            }
+            
+            else if(defined_height == 0 && defined_width == 0){
+               c_height = $(elem).height();
+               c_width = $(elem).width();
+            }
+            else if(defined_height == 0 && defined_width != 0){
+               c_height = defined_width/ratio;
+               c_width = defined_width;
+            }
+            else{
+               c_height = defined_height;
+               c_width = defined_height*ratio;
+            }           
+        }
+
         function bity_action(){
             setTimeout(function(){
-            
                 next = index + 1;
                 if(next > count){
                     next = 0;
@@ -66,9 +113,11 @@ jQuery.fn.bityslider = function(time,type){
             /*set target as top element*/
                 $(target).css('z-index','100');
                 $(follow).css('z-index','99');
-            /*reset div dimentions to match the slide*/
-                c_height = $(follow).height();
-                c_width = $(follow).width();
+            
+                define_dims(follow);    
+            
+            /*set slide dims to match the container*/     
+                $(follow).css({"height":c_height, "width":c_width});
                 
             /*position the slide under (in case it moved)*/          
                 pos = $(container).offset(); 
@@ -112,5 +161,7 @@ jQuery.fn.bityslider = function(time,type){
 
 
 $(document).ready(function(){
-    $('.bityslider').kslide(3000,"fade");
+    $('.bityslider').each(function(){
+        $(this).bityslider(3000,"fade");    
     });
+});
