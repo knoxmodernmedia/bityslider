@@ -1,126 +1,76 @@
+ 
+#bityslider
+	
+*yet another jQuery slider plugin*
 
-	<h1>bityslider~</h1>
-	<i>
-		yet another jQuery slider plugin
-	</i>
-	<br/>
-	<p>
-		Like most of us I have a few go-to slider plugins that I use on a regular basis. However I have been less and less
-		happy with the compact slider I usually use for super-simple sliders; it feels clunky and just isn't cutting it. I spent
-		quite a bit of time looking over the many, many sliders available but couldn't find anything I was really happy with 
-		(and confident enough in to start using in production). I decided it would be easier just to write a tiny little slider that 
-		does the few things I need it to. Here it is! 
-		This is probably the most limited slider on earth, but at <b>1.5k</b> <sub>(minified)</sub> it isn't going to be a powerhouse. 
-		If all you need is one of the limited functions this might just do the trick.
- 	</p>
- 	<q>
- 		Every time a bell rings, an angel gets his wings... and a web developer makes another slider plugin.
-	</q>
+Like most of us I have a few go-to slider plugins that I use on a regular basis. However I have been less and less
+happy with the compact slider I usually use for super-simple sliders; it feels clunky and just isn't cutting it. I spent
+quite a bit of time looking over the many, many sliders available but couldn't find anything I was really happy with 
+(and confident enough in to start using in production). I decided it would be easier just to write a tiny little slider that 
+does the few things I need it to. Here it is! 
+This is probably the most limited slider on earth, but at <b>1.5k</b> <sub>(minified)</sub> it isn't going to be a powerhouse. 
+If all you need is one of the limited functions this might just do the trick.
+
+>Every time a bell rings, an angel gets his wings...
+> and a web developer makes another slider plugin
+
+##Browser support
 	
-	<h3>
-		Browser support
-	</h3>
-	<sub>
-		this is largely based on what jQuery you are using. Tested as far back as 1.2.3, works all the way up to current 2.0.3 
-	</sub>
-	<ul>
-		<li>
-			IE 7+
-		</li>
-		<li>
-			Windows Mobile 8
-		</li>
-		<li>
-			Firefox (tested in 27.0)
-		</li>
-		<li>
-			Chrome (tested in 32)
-		</li>
-		<li>
-			Chrome mobile
-		</li>
-		<li>
-			Opera mobile
-		</li>
-		<li>
-			Safari (tested back to 5.1)
-		</li>
-		<li>
-			android native browser
-		</li>
-	<ul>
-	<p>
-		I am sure compatability goes back much further than this, the combination of browser access/available time to commit to testing 
-		limited me to the list above.
-	</p>
+#####this is largely based on what jQuery you are using. Tested as far back as 1.2.3, works all the way up to current 2.0.3 
+
++IE 7+
++Windows Mobile 8
++Firefox (tested in 27.0)
++Chrome (tested in 32)
++Chrome mobile
++Opera mobile
++Safari (tested back to 5.1)
++android native browser
+
+*I am sure compatability goes back much further than this, the combination of browser access/available time to commit to testing limited me to the list above.*
+
+##Usage
 	
-	<h2>
-		Usage
-	</h2>
-		<p>
-			Include the script after your jquery, like so:
-		</p>
-		<pre>
-			<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-			<script type="text/javascript" src="path_to_script/bityslider.min.js"></script>
-		</pre>
-		<p>
-			There are two methods for calling the slider.
-		</p>
-		<ol>
-			<li>
-				<b>
-					SUPER LAZY METHOD
-				</b>
-				<br/>
-					give your slider div the class name "bityslider". Example:
-					<pre>
-						<div class="bityslider">
-							<!--each element inside becomes a slide-->
-						</div> 
-					</pre>
-					the bityslider div defaults to a "fade" technique, slidng every 5 seconds.
-			</li>
-			<li>
-				<b>
-					SLIGHTLY LESS LAZY METHOD
-				</b>
-				<br/>
-					call the bityslider function on a div, any diy you want. You can pass 2 params to it- speed and type.
-					<br/>
-					<u>Speed</u>- the time between slides in microseconds. 5000 is 5 seconds, 2500 is 2.5 seconds etc.
-					<br/>
-					<u>Type</u>- the type of slide. Current options are "fade","shrink" and "wipe".
-					<br/>
-					So for examle if you have a div with an id of `dim_8`,
-					 and you wanted to slide the contents every 3 seconds
-					 using a shrinking effect in the transition, it would look like this: 	
-		 		<pre>
-		 			<div id="dim_8">
-		 				
-		 				<img id="buckaroo_banzai">
-		 				
-		 				<article id="john_bigboote"></article>
-		 				
-		 				<a id="penny_priddy"></a>
-		 				
-	 				</div>
-	 				
-	 				<script type="text/javascript">
-	 				
-	 				$(document).ready(function(){
-	 				
-	 					$('dim_8').bittyslider(3000,"shrink");
-		 			
-		 			});
-		 			</script>	
-				</pre>
-				
-			</li>
-			
-			<p>
-				That is just about it! Hope this saves you a couple of minutes. Please feel free to fork and make additions if you
-				get the itch. 
-			<p>
+Include the script after your jquery, like so:
+
+```
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="path_to_script/bityslider.min.js"></script>
+```
+There are two methods for calling the slider.
+
+**SUPER LAZY METHOD**
+give your slider div the class name "bityslider". Example:
+```
+<div class="bityslider">
+<!--each element inside becomes a slide-->
+</div> 
+```
+the bityslider div defaults to a "fade" technique, slidng every 5 seconds.
+
+**SLIGHTLY LESS LAZY METHOD**
+
+call the bityslider function on a div, any diy you want. You can pass 2 params to it- speed and type.
+1.**Speed**- the time between slides in microseconds. 5000 is 5 seconds, 2500 is 2.5 seconds etc.
+2.**Type**- the type of slide. Current options are "fade","shrink" and "wipe".
+
+So for examle if you have a div with an id of `dim_8`,
+and you wanted to slide the contents every 3 seconds
+using a shrinking effect in the transition, it would look like this: 	
+
+```
+<div id="dim_8">
+<img id="buckaroo_banzai">
+<article id="john_bigboote"></article>
+<a id="penny_priddy"></a>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+$('dim_8').bittyslider(3000,"shrink");
+});
+</script>	
+```				
+That is just about it! Hope this saves you a couple of minutes. Please feel free to fork and make additions if you
+get the itch. 
  	
 	
