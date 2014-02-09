@@ -32,63 +32,73 @@ jQuery.fn.bityslider = function(time,type){
         if(!type){
             var type = "fade";
         }
-        var container = $(this);
+       
+        var parent = $(this);
         var count = ($(this).children().length)-1;
         var index = 0;
         var next = 1;
-        var first =  $(container).children().eq(0);
         var c_height;
         var c_width;       
+        var go_on = true;
+        var timer;
+        var defined_height;
+        var defined_width;
         
-        $(container).children().hide();
-     
-     /*check container size with no elements. if 0, we know size is undefined*/
-        var defined_height = $(container).height();
-        var defined_width = $(container).width();
+        $(parent).children().hide();
+        
+        $(parent).children().wrapAll("<div/>");
+        
+        var container = $(parent).find('div').eq(0);
+        
+        var first =  $(container).children().eq(0);
+   
+        set_baseline();
+        
+        define_dims(first);
+        
+        $(container).css({width:c_width, height:c_height});
         $(first).show();
       
-     /*check if the first slide is loaded / rendered, if so fire (non-image test is here)*/   
+        /*check if the first slide is loaded & rendered, if so fire (non-image test is here)*/   
         if(first.complete || $(first).height() > 0){
-            start_bity();        
+            bity_action();        
         }
     
-    /*if it hasn't rendered yet it is probably an image. Use load to fire once it has rendered*/
+        /*if it hasn't rendered yet it is probably an image. Use load to fire once it has rendered*/
         else{
            $(first).load(function(){
-               start_bity();
+               bity_action();
            });
         }
         
-        function start_bity(){
-     
-     /*set height and width for the container if not defined*/
+        /**
+         * check the current size of the parent div relative to the document.
+         */
+        function set_baseline(){
+            defined_height = $(parent).height();
+            defined_width = $(parent).width();
             
-            define_dims(first);
-          
-            $(container).css({ "height":c_height, "width":c_width});
-                   
-            bity_action();
         }
-
+        
+        
         /*if the container size is defined use that dimension.
          * If not use the visible slide dimension.
          * If just one is defined, determine the ratio and define it that way.
          *
          */
         function define_dims(elem){
-            
             var ratio = $(elem).width()/$(elem).height();
             
-            if(defined_height != 0 && defined_width != 0){
+            if(defined_width != 0 && defined_height !=0){
                c_height = defined_height;
                c_width = defined_width;
             }
             
-            else if(defined_height == 0 && defined_width == 0){
+            else if(defined_width == 0 && defined_height == 0){
                c_height = $(elem).height();
                c_width = $(elem).width();
             }
-            else if(defined_height == 0 && defined_width != 0){
+            else if(defined_width != 0 && defined_height == 0){
                c_height = defined_width/ratio;
                c_width = defined_width;
             }
@@ -99,7 +109,15 @@ jQuery.fn.bityslider = function(time,type){
         }
 
         function bity_action(){
-            setTimeout(function(){
+         if(go_on){
+         timer = setTimeout(function(){
+                    bity_fire();
+                    bity_action();
+            },time);
+         }
+        }    
+               
+            function bity_fire(){   
                 next = index + 1;
                 if(next > count){
                     next = 0;
@@ -108,7 +126,6 @@ jQuery.fn.bityslider = function(time,type){
                 var follow = $(container).children().eq(next);
             
             /*start absolute positioning*/   
-                $(target).css("position","absolute");
                 $(follow).css("position","absolute");
             /*set target as top element*/
                 $(target).css('z-index','100');
@@ -117,24 +134,25 @@ jQuery.fn.bityslider = function(time,type){
                 define_dims(follow);    
             
             /*set slide dims to match the container*/     
-                $(follow).css({"height":c_height, "width":c_width});
+                $(follow).css({height:c_height, width:c_width});
                 
             /*position the slide under (in case it moved)*/          
                 pos = $(container).offset(); 
       
             
             if(type == "shrink"){
-                $(target).animate({height: "toggle"},1000);
+                $(target).animate({"height": "toggle"},1000);
                 $(container).css({ height:c_height, width:c_width});
                 $(follow).css({"top":pos.top, "left":pos.left}).fadeIn();
             }
             else if(type == "wipe"){
-                $(target).animate({width: 0, height:c_height},2000, function(){
-                    $(target).hide().css('width','auto');
+                $(target).animate({width: 0},2000,function(){
+                  $(target).hide();  
                 });
                 $(container).css({ height:c_height, width:c_width});
-                $(follow).css({"top":pos.top, "left":pos.left,"z-index":99}).show();
+                $(follow).css({"top":pos.top, "left":pos.left}).show();
             }
+            
             /*default to fade*/
             else{    
                 $(target).fadeOut();
@@ -147,13 +165,35 @@ jQuery.fn.bityslider = function(time,type){
                 else{
                     index=0;
                 }
+               
+            }
                 
-                bity_action();
-            },time);
+            function reset(){
                 
-        }
+                index = 0;
+                next = 1;
+                    
+                go_on = false;
+                clearTimeout(timer);
+                $(container).children().hide();
+                $(container).css({height:"auto", width:"auto"});
+                $(container).children().each(function(){
+                    $(this).css('position','static');
+                });
+                
+                set_baseline();
+                define_dims(first);
+                
+                $(first).show();
+                
+                  bity_fire();  
+                  go_on = true;
+                  bity_action();  
+            }
     
-    
+        $(window).resize(function(){
+                reset();  
+            });
     
     
         
